@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +27,9 @@ public class ListFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ListView listView;
+    private ArrayList<String> mainList;
+    private ArrayAdapter<String> adapter;
 
     public ListFragment() {
         // Required empty public constructor
@@ -60,5 +67,17 @@ public class ListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list, container, false);
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        listView = view.findViewById(R.id.mainList);
+
+        mainList = new ArrayList<>();
+        mainList.add("AAPL");
+        mainList.add("NEE");
+        mainList.add("DIS");
+
+        adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, mainList);
+        listView.setAdapter(adapter);
     }
 }
