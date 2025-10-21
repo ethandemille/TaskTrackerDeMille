@@ -24,7 +24,7 @@ public class TaskContentProvider extends ContentProvider {
                     COLUMN_OWNER + " TEXT )";
 
     public final static Uri CONTENT_URI = Uri.parse("content://com.example.tasktrackerdemille.provider");
-
+    MainDatabaseHelper mHelper;
     protected final class MainDatabaseHelper extends SQLiteOpenHelper {
 
 
@@ -35,6 +35,13 @@ public class TaskContentProvider extends ContentProvider {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(SQL_CREATE);
+        }
+
+        public Cursor query(Uri uri, String[] projection, String selection,
+                            String[] selectionArgs, String sortOrder) {
+            Cursor c = mHelper.getReadableDatabase().query(TABLE_NAME, projection, selection,
+            selectionArgs, null, null, sortOrder);
+            return c;
         }
 
         @Override
@@ -63,7 +70,8 @@ public class TaskContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         String owner = values.getAsString(COLUMN_OWNER);
         String task = values.getAsString(COLUMN_TASK);
-        long id = mHelper.getWr
+        long id = mHelper.getWritableDatabase().insert(TABLE_NAME, null, values);
+        return Uri.withAppendedPath(uri, id + "");
     }
 
     @Override

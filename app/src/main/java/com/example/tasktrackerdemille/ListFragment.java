@@ -73,9 +73,9 @@ public class ListFragment extends Fragment {
         listView = view.findViewById(R.id.mainList);
 
         mainList = new ArrayList<>();
-        mainList.add("AAPL");
-        mainList.add("NEE");
-        mainList.add("DIS");
+        //mainList.add("AAPL");
+        //mainList.add("NEE");
+        //mainList.add("DIS");
 
         adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, mainList);
         listView.setAdapter(adapter);

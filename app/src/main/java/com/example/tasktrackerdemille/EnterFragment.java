@@ -1,12 +1,21 @@
 package com.example.tasktrackerdemille;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import com.example.tasktrackerdemille.model.Task;
+
+import java.util.LinkedList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +32,34 @@ public class EnterFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    LinkedList<Task> tasks;
+    EditText taskET;
+    EditText ownerET;
+    View.OnClickListener listener = new View.OnClickListener(){
+        public void onClick(View view){
+            String t = taskET.getText().toString();
+            String o = ownerET.getText().toString();
+            ContentValues values = new ContentValues();
+            values.put(TaskContentProvider.COLUMN_TASK, t);
+            values.put(TaskContentProvider.COLUMN_OWNER, o);
+            getActivity().getContentResolver().insert(TaskContentProvider.CONTENT_URI, values);
+
+            Cursor c = getActivity().getContentResolver().query(TaskContentProvider.CONTENT_URI,
+                    null, null, null, null);
+            if(c != null){
+                c.moveToFirst();
+                if(c.getCount() > 0){
+                    while(c.isAfterLast() != false){
+                        String ta = c.getString(1);
+                        String oa = c.getString(2);
+                        String message = ta + "--" + oa;
+                        Log.i("TAG", message);
+                        c.moveToNext();
+                    }
+                }
+            }
+        }
+    };
 
     public EnterFragment() {
         // Required empty public constructor
@@ -53,12 +90,20 @@ public class EnterFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        tasks = new LinkedList<>();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_enter, container, false);
+        View root = inflater.inflate(R.layout.fragment_enter, container, false);
+        Button b = root.findViewById(R.id.button);
+        taskET = root.findViewById(R.id.taskName);
+        ownerET = root.findViewById(R.id.personName);
+        b.setOnClickListener(listener);
+        return root;
+
     }
 }
